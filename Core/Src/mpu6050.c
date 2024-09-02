@@ -2,6 +2,7 @@
 #include <main.h>
 #include <stdio.h>
 #include <math.h>
+#include <motors.h>
 
 extern I2C_HandleTypeDef hi2c1;
 extern TIM_HandleTypeDef htim2;
@@ -114,5 +115,9 @@ float mpu6050_read(){
     // Combine accelerometer and gyroscope pitch using a complementary filter
     pitch = GYRO_WEIGHT * pitch_gyro + (1.0 - GYRO_WEIGHT) * pitch_acc;
 
-    return pitch;
+    float control_output = 0;
+
+    pid_control(pitch, &control_output, &delta_time_seconds);
+
+    return control_output;
 }
